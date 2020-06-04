@@ -2,17 +2,26 @@ import React from 'react';
 import {shallow} from 'enzyme';
 import Input from './Input';
 
-import { findByTestAttr } from '../test/testUtils';
+import { findByTestAttr,checkProps } from '../test/testUtils';
 
-const setup = ()=>{
-const wrapper= shallow(<Input />)
+const setup = (secretWord='Party')=>{
+const wrapper= shallow(<Input secretWord={secretWord}/>)
 return wrapper;
 }
 
 describe('Input Component',()=>{
+
+    const defaultProps={
+        secretWord:'Test'
+    }
+
+    it ('Checking Prop types',()=>{
+        checkProps(Input,defaultProps);
+
+    })
     it('render without any error',()=>{
         const wrapper = setup();
-        const appComponent = findByTestAttr(wrapper,'input-component');
+        const appComponent = findByTestAttr(wrapper,'component-input');
         expect(appComponent.length).toBe(1);
         });
 })
