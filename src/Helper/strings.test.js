@@ -1,29 +1,46 @@
-import stringModule from './strings';
-const {getStringByLanguage} = stringModule;
-
+import stringModule from "./strings";
+const { getStringByLanguage } = stringModule;
 
 const strings = {
-    en: { submit: 'submit' },
-    emoji: { submit: '🚀' },
-    mermish: {},
-  }
+  en: { submit: "submit" },
+  emoji: { submit: "🚀" },
+  mermish: {}
+};
 
-it ('returns correct submit string for english',()=>{
-    const string = getStringByLanguage('en', 'submit', strings);
-    expect(string).toBe('submit');
-});
+describe("language string testing", () => {
+  const mockWarn = jest.fn();
+  let originalWarn;
 
-it ('returns the correct submit string for emoji',()=>{
-    const string = getStringByLanguage('emoji', 'submit', strings);
-    expect(string).toBe('🚀');
-});
+  beforeEach(() => {
+    originalWarn = console.warn;
+    console.warn = mockWarn;
+  });
 
-it ('returns english submit string when language does not exist',()=>{
-    const string = getStringByLanguage('notALanguage', 'submit', strings);
-    expect(string).toBe('submit');
-});
+  afterEach(() => {
+    console.warn = originalWarn;
+  });
 
-it ('returns english submit string when submit key does not exist for language',()=>{
-    const string = getStringByLanguage('mermish', 'submit', strings);
-    expect(string).toBe('submit');
+  it("returns correct submit string for english", () => {
+    const string = getStringByLanguage("en", "submit", strings);
+    expect(string).toBe("submit");
+    expect(mockWarn).not.toHaveBeenCalled();
+  });
+
+  it("returns the correct submit string for emoji", () => {
+    const string = getStringByLanguage("emoji", "submit", strings);
+    expect(string).toBe("🚀");
+    expect(mockWarn).not.toHaveBeenCalled();
+  });
+
+  it("returns english submit string when language does not exist", () => {
+    const string = getStringByLanguage("notALanguage", "submit", strings);
+    expect(string).toBe("submit");
+    expect(mockWarn).toHaveBeenCalledWith("Could not get string [submit] for [notALanguage]");
+  });
+
+  it("returns english submit string when submit key does not exist for language", () => {
+    const string = getStringByLanguage("mermish", "submit", strings);
+    expect(string).toBe("submit");
+    expect(mockWarn).toHaveBeenCalledWith("Could not get string [submit] for [mermish]");
+  });
 });
